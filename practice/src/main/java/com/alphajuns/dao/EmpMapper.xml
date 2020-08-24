@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.alphajuns.dao.EmpMapper">
+
+    <select id="findEmpByMap" parameterType="map" resultType="map">
+        select * from emp where job = #{paramMap.JOB, jdbcType=VARCHAR}
+    </select>
+
+    <select id="findEmpByList" parameterType="list" resultType="map">
+       select * from emp where empno in
+        <foreach item="item" index="index" collection="paramList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <update id="updateEmpByMapList" parameterType="list">
+        begin
+        <foreach item="paramMap" collection="paramMapList" open="" close="" separator="">
+            update emp set sal = #{paramMap.SAL, jdbcType=INTEGER} where empno = #{paramMap.EMPNO, jdbcType=INTEGER};
+        </foreach>
+        commit;
+        end;
+    </update>
+
+    <select id="findEmpByListMap" parameterType="map" resultType="map">
+        select * from emp where empno in 
+            <foreach item="empno" index="index" collection="paramListMap.empnoList" open="(" close=")" separator=",">
+                #{empno}
+            </foreach>
+    </select>
+
+    <insert id="insertDept" parameterType="map">
+        insert into dept (DEPTNO, DNAME, LOC)
+        VALUES
+        (
+            #{paramMap.DEPTNO, jdbcType=INTEGER},
+            #{paramMap.DNAME, jdbcType=VARCHAR},
+            #{paramMap.LOC, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="insertSalGrade" parameterType="map">
+        insert into salgrade (GRADE, LOSAL, HISAL)
+        VALUES
+        (
+            #{paramMap.GRADE, jdbcType=INTEGER},
+            #{paramMap.LOSAL, jdbcType=INTEGER},
+            #{paramMap.HISAL, jdbcType=INTEGER}
+        )
+    </insert>
+
+    <select id="findEmpByEpmno" resultType="com.alphajuns.pojo.Employee">
+        select * from emp where empno = 7900
+    </select>
+
+    <select id="findEmpById" parameterType="string" resultType="com.alphajuns.pojo.Employee">
+        select * from emp where empno = #{empno}
+    </select>
+
+    <select id="findEmpByEname" parameterType="string" resultType="com.alphajuns.pojo.Employee">
+        select * from emp where ename = #{ename}
+    </select>
+
+</mapper>
